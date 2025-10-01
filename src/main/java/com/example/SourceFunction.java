@@ -13,13 +13,8 @@ public class SourceFunction implements CloudEventsFunction {
 
     @Override
     public void accept(CloudEvent cloudEvent) throws Exception {
-        final var message = objectMapper.readValue(
-            new String(cloudEvent.getData().toBytes()),
-            MessagePublishedData.class
-        );
 
-        final var decodedMessage = Base64.getDecoder().decode(message.getMessage().getData().toByteArray());
 
-        logger.info("This is message from source cloud function: " + new String(decodedMessage));
+        logger.info("This is message from source cloud function: " + new String(cloudEvent.getData().toBytes()));
     }
 }
