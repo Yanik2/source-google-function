@@ -22,6 +22,7 @@ public class SourceFunction implements CloudEventsFunction {
     public void accept(CloudEvent cloudEvent) throws Exception {
         logger.info("Received event");
         final var jsonNode = objectMapper.readTree(cloudEvent.getData().toBytes());
+        logger.info("Event: {}", jsonNode);
         final var encodedData = jsonNode.get("data").asText();
         final var decodedData = Base64.getDecoder().decode(encodedData);
         final var decodedJson = objectMapper.readTree(decodedData);
