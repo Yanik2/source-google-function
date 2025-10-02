@@ -1,0 +1,9 @@
+<configuration>
+    <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+        <log>pubsub-to-gcs</log>
+        <flushLevel>ERROR</flushLevel>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CLOUD"/>
+    </root>
+</configuration>
