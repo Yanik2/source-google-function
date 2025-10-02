@@ -23,10 +23,10 @@ public class SourceFunction implements CloudEventsFunction {
         logger.info("Received event");
         final var jsonNode = objectMapper.readTree(cloudEvent.getData().toBytes());
         logger.info("Event: {}", jsonNode);
-        final var encodedData = jsonNode.get("data").asText();
+        final var encodedData = jsonNode.get("message").get("data").asText();
         final var decodedData = Base64.getDecoder().decode(encodedData);
         final var decodedJson = objectMapper.readTree(decodedData);
-        final var filename = getFileName(decodedJson);
+        final var filename = getFileName(decodedJson.get("message"));
         final var bais = new ByteArrayInputStream(decodedData);
         storage.createFrom(
             BlobInfo.newBuilder(
@@ -41,7 +41,7 @@ public class SourceFunction implements CloudEventsFunction {
         return switch (jsonNode.get("businessProcess").asText()) {
             case "USER" -> "auditlogs/user";
             case "INVENTORY" -> "auditlogs/inventory";
-            default -> "auditlogs/clinical-trial/" + jsonNode.get("clinicalTrialId").asText();
+            default -> "auditlogs/clinical-trial/" + jsonNode.get("attributes").get("clinicalTrialId").asText();
         };
     }
 }
